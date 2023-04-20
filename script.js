@@ -1,8 +1,25 @@
 let coordinatesArray = [];
 let puntos = [];
 
+// Define un nuevo icono
+var greenIcon = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+let isFirstClick = true;
+
 function onMapClick(e) {
-  let marker = L.marker(e.latlng).addTo(markersLayer);
+  let marker;
+  if (isFirstClick) {
+    marker = L.marker(e.latlng, {icon: redIcon}).addTo(markersLayer);
+    isFirstClick = false;
+  } else {
+    marker = L.marker(e.latlng).addTo(markersLayer);
+  }
   marker.bindPopup(`Coordenadas: ${e.latlng}`).openPopup();
 }
 
@@ -41,7 +58,7 @@ function alg_Genetico() {
   }
   //algoritmo genetico
   const populationSize = 50; //Es la poblacion la cual va a generar
-  const maxGenerations = 10000;
+  const maxGenerations =30000;
   // Definir la función de fitness para evaluar cada ruta
   //Regresara la que tenga el mayor valor pero como buscamos el menor
   //al final se saca un numero reciproco
@@ -200,8 +217,14 @@ L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
 let markersLayer = L.featureGroup().addTo(map);
 
 map.on("click", function (e) {
-  let marker = L.marker(e.latlng).addTo(markersLayer);
-  marker.bindPopup(`Coordenadas: ${e.latlng}`).openPopup();
+  //let marker = L.marker(e.latlng).addTo(markersLayer);
+  let marker;
+  if (isFirstClick) {
+    marker = L.marker(e.latlng, {icon: greenIcon}).addTo(markersLayer);
+    isFirstClick = false;
+  } else {
+    marker = L.marker(e.latlng).addTo(markersLayer);
+  }
   coordinatesArray.push([e.latlng.lat, e.latlng.lng]);
 });
 
